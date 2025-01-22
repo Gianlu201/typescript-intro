@@ -110,7 +110,8 @@ arrayOfNumber.forEach((n) => {
 // variante dugli array: la TUPLA
 let genericArray: (string | number)[] = ['Stefano', 10, 'EPICODE'];
 
-const z = genericArray[2] as string; // siamo andati a "forzare" TS e dirgli che il terzo
+const z = genericArray[2] as string;
+// siamo andati a "forzare" TS e dirgli che il terzo
 // elemento dell'array era un astringa
 
 z.toUpperCase(); // a questo punto sono riuscito ad applicare il metodo toUpperCase()
@@ -118,6 +119,20 @@ z.toUpperCase(); // a questo punto sono riuscito ad applicare il metodo toUpperC
 let tuple: [number, string, string, number] = [6, 'Gianluca', 'Di Diego', 11];
 tuple.push(100);
 tuple[1].toUpperCase(); // TS già sà che questo elemento è una stringa
+
+// gli ENUM
+// enum omogenei
+enum Months {
+  january = 1,
+  February, // -> 2
+  March, // -> 3
+} // i valori vengono incrementati gradualmente a partire dal valore assegnato
+
+// enum eterogenei
+enum HeterogeneusEnum {
+  NO = 0,
+  YES = 'YES',
+}
 
 // OGGETTI
 let epicodeStaffMember1 = {
@@ -285,3 +300,45 @@ let americanAddress: Address<USAAddress> = {
 };
 
 americanAddress.area.country.toUpperCase();
+
+// chiamate API
+const FETCHURL = 'striveschool-api.herokuapp.com/food-books';
+
+interface Book {
+  id: number;
+  title: string;
+  price: string;
+  imageUrl: string;
+  description: string;
+}
+
+const manipulateDom = (data: Book[]) => {
+  data.forEach((bookObj) => {
+    const container = document.createElement('div');
+    const img = document.createElement('img');
+    img.setAttribute('src', bookObj.imageUrl);
+    container.appendChild(img);
+    document.getElementById('main')!.appendChild(container);
+  });
+};
+
+const getBooks = async () => {
+  try {
+    const response = await fetch(FETCHURL);
+
+    if (response.ok) {
+      const data: Book[] = await response.json();
+      manipulateDom(data);
+    } else {
+      throw new Error('Errore nel recuopero libri');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+document.addEventListener('load', init);
+
+function init() {
+  getBooks();
+}
