@@ -138,6 +138,7 @@ interface Pet {
   breed: string;
   age: number;
   skills: string[];
+  numberOfPaws?: number;
 }
 
 let pet1: Pet = {
@@ -145,6 +146,7 @@ let pet1: Pet = {
   breed: 'Labrador',
   age: 5,
   skills: ['barking', 'playing', 'sleeping'],
+  numberOfPaws: 4,
 };
 
 // se volessi riutilizzare la struttura di pet1 per creare altri pets "in serie"?
@@ -153,5 +155,133 @@ let pet2: Pet = {
   breed: 'European',
   age: 7,
   skills: ['asking-for-food', 'playing', 'destroying', 'judging'],
-  // numberOfPaws: 4  // torna errore perché non presente nell'interfaccia
+  numberOfPaws: 4,
+  // color: orange // torna errore perché non è presente nell'interfaccia
 };
+
+let pet3: Pet = {
+  species: 'Snake',
+  breed: 'Copperhead',
+  age: 1,
+  skills: ['crawls', 'eat', 'sleep'],
+};
+
+// le interfacce si possono ESTENDERE
+interface HumanBeing {
+  name: string;
+  age: number;
+  height: number;
+  eyeColor: string;
+  hairColor: string;
+}
+
+const mario: HumanBeing = {
+  name: 'Mario Mario',
+  age: 30,
+  height: 170,
+  eyeColor: 'brown',
+  hairColor: 'brown',
+};
+
+interface TennnisPlayer extends HumanBeing {
+  favoriteHand: string;
+  championshipsWon: number;
+  favouriteCourt: string;
+}
+
+const luigi: TennnisPlayer = {
+  name: 'Luigi Mario',
+  age: 30,
+  height: 175,
+  eyeColor: 'brown',
+  hairColor: 'brown',
+  favoriteHand: 'left',
+  favouriteCourt: 'grass',
+  championshipsWon: 0,
+};
+
+const bowser: TennnisPlayer = {
+  name: 'Bowser Koopa',
+  age: 35,
+  height: 185,
+  eyeColor: 'brown',
+  hairColor: 'brown',
+  favoriteHand: 'right',
+  favouriteCourt: 'clay',
+  championshipsWon: 10,
+};
+
+const yoshi: TennnisPlayer = {
+  name: 'Yoshi',
+  age: 25,
+  height: 175,
+  eyeColor: 'brown',
+  hairColor: 'brown',
+  favoriteHand: 'right',
+  favouriteCourt: 'grass',
+  championshipsWon: 3,
+};
+
+const tennisPlayers: Array<TennnisPlayer> = [];
+tennisPlayers.push(luigi, bowser, yoshi);
+
+console.log(tennisPlayers);
+
+tennisPlayers.forEach((player) => {
+  console.log(player.favoriteHand.length.toPrecision(2));
+});
+
+const arrayOfTennisPlayersNames: string[] = tennisPlayers.map((player) => {
+  return player.name;
+});
+
+console.log(arrayOfTennisPlayersNames);
+
+// GENERICS
+// sono delel entità non ben definite, utili nelle interfacce
+// Un GENERIC è un TIPO  passato come ARGOMENTO per un'INTERFACCIA
+// Lo si definisce nella stesura dell'interfaccia, e potrà essere utilizzato
+// come valore di tipo per una o più proprietà; il suo scopo è rendere
+// l'interfaccia più "generica" (più riutilizzabile)
+
+interface USAAddress {
+  state: string;
+  country: string;
+}
+
+interface Address<A> {
+  street: string;
+  civicNumber: number;
+  city: string;
+  zipCode: string;
+  area: A; // sto dicendo che NON CONOSCO il tipo di "area"; verrà passato
+  // all'utilizzo dell'interfaccia sotto forma di GENERIC
+}
+
+let italianAddress: Address<string> = {
+  street: 'Via Roma',
+  civicNumber: 1,
+  city: 'Paperino',
+  zipCode: '59100',
+  area: 'Italy',
+};
+
+italianAddress.area.toUpperCase();
+
+// {
+// state: 'Oklahoma',
+// country: 'USA'
+// }
+
+let americanAddress: Address<USAAddress> = {
+  street: 'E Hills Dr',
+  civicNumber: 2711,
+  city: 'Moore',
+  zipCode: '73160',
+  area: {
+    state: 'Oklahoma',
+    country: 'USA',
+  },
+};
+
+americanAddress.area.country.toUpperCase();
